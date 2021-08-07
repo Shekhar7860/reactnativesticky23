@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "13705912507",
+    "project_id": "stickyformreactnative",
+    "storage_bucket": "stickyformreactnative.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13705912507:android:02bc1cd1aed02f7877499e",
+        "android_client_info": {
+          "package_name": "com.stickyformtractnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13705912507-2bvptaj2fp03nm733e8n0dv4u84v7dba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCskcyO44RwbYtUXJwrZYSM-WYbnkmy0sQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "13705912507-2bvptaj2fp03nm733e8n0dv4u84v7dba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
