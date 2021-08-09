@@ -11,7 +11,7 @@ import React from "react";
 import {StickyForm}  from "./StickyForm";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import type { IndexPath } from "../../src";
-import database from '@react-native-firebase/database';
+
 export class StickyFormExample extends React.Component {
   constructor (props) {
     super(props)
@@ -46,28 +46,7 @@ export class StickyFormExample extends React.Component {
 
   _list: StickyForm;
   componentDidMount = () => {
-    database().ref('/users').once('value')
-     .then((dataSnapshot) => {
-      
-       let newdata = dataSnapshot.val();
-      let updatedData = [...this.state.data]
-     
-     if(dataSnapshot.val())
-     {
-       let items = Object.values(newdata);
-
-       for(let i in items){
-
-      updatedData[0].items.push({
-        key :  Object.keys(dataSnapshot.val())[i],
-        title: parseInt(i) + parseInt(1),
-        data: [items[i].firstName, items[i].lastName, items[i].age, items[i].profession, items[i].city, items[i].country],
-      })
-       }
-       this.setState({data : updatedData})
-     }
-       
-      });
+  
   }
 
   editDelete = (param, path) => {
@@ -116,7 +95,7 @@ export class StickyFormExample extends React.Component {
           <Text>Sr.No</Text>
         </View>
         {this.state.titles.map((title, index) => (
-          <View style={styles.headerText} key={index}>
+          <View style={{...styles.headerText, backgroundColor : title == 'First Name' ? '#e67e22' : title == 'Last Name' ? '#c0392b' : title == 'Age' ? '#8e44ad' : title == 'Proffession' ? '#27ae60' : title == 'City' ? '#eccc68' : title == 'Country' ? '#eb3b5a' : 'white'}} key={index}>
             <Text>{title}</Text>
           </View>
         ))}
@@ -151,7 +130,7 @@ export class StickyFormExample extends React.Component {
           <Text>{item ? item.title : null}</Text>
         </View>
         {item ? item.data.map((title, index) => (
-          <View style={styles.text} key={index}>
+          <View style={{...styles.text, backgroundColor : index == 0 ? '#e67e22' : index == 1 ? '#c0392b' : index == 2 ? '#8e44ad' : index == 3 ? '#27ae60' : index == 4 ? '#eccc68' : index == 5 ? '#eb3b5a' : 'white'}} key={index}>
             <Text>{title}</Text>
           </View>
         )) : null}
@@ -182,7 +161,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#EEE",
   },
@@ -194,7 +172,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#EEE",
     borderLeftWidth: StyleSheet.hairlineWidth,
     borderRightWidth: StyleSheet.hairlineWidth,
     borderColor: "gray",

@@ -8,10 +8,11 @@
  */
 
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, TextInput, Alert, Button } from "react-native";
 import { SpringScrollView } from "react-native-spring-scrollview";
-import database from '@react-native-firebase/database';
-
+import moment from 'moment';
+// import database from '@react-native-firebase/database';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
  class Home extends React.Component {
   constructor (props) {
     super(props)
@@ -23,7 +24,9 @@ import database from '@react-native-firebase/database';
       city : '',
       country : '',
       key : '',
-      buttonText : 'Submit'
+      selectedDate : moment(new Date()).format("DD/MM/YYYY"),
+      buttonText : 'Submit',
+      setDatePickerVisibility : false
     }
   }
   static navigationOptions = {
@@ -40,7 +43,7 @@ import database from '@react-native-firebase/database';
       age : data[2],
       profession: data[3],
       city : data[4],
-      country : data[5],
+      selectedDate : data[5],
       key : this.props.route.params.data.key,
       buttonText : 'Update'
     })
@@ -54,14 +57,29 @@ import database from '@react-native-firebase/database';
   
     
   }
+   showDatePicker = () => {
+     this.setState({
+      setDatePickerVisibility : true
+     })
+  };
 
+  hideDatePicker = () => {
+    this.setState({
+      setDatePickerVisibility : false
+     })
+  };
+
+ handleConfirm = (date) => {
+    this.setState({selectedDate : moment(date).format("DD/MM/YYYY")})
+    this.hideDatePicker();
+  };
   submit = () => {
     const {firstName, lastName, profession, age, location, city, country, buttonText} = this.state
     if(firstName && lastName && profession && age && city && country){
     const reference = database().ref('/users');
     if(buttonText == 'Submit')
     {
-      reference.push({firstName, lastName, age, profession, city, country})
+      reference.push({firstName, lastName, age, profession, city, country, selectedDate})
     }
     else {
 reference.child(this.state.key).update({firstName, lastName, age, profession, city, country})
@@ -77,13 +95,20 @@ else {
   render() {
    
     return (
-      <SpringScrollView>
+      <SpringScrollView style={{flex : 1}}>
         <TextInput placeholder="Enter First Name" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({firstName : text})} value={this.state.firstName}/>
          <TextInput placeholder="Enter Last Name" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({lastName : text})} value={this.state.lastName}/>
         <TextInput placeholder="Enter Age" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({age : text})} value={this.state.age}/>
         <TextInput placeholder="Enter Profession" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({profession : text})} value={this.state.profession}/>
         <TextInput placeholder="Enter City" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({city : text})} value={this.state.city}/>
-        <TextInput placeholder="Enter Country" style={styles.textInput} placeholderTextColor="black" onChangeText={(text) => this.setState({country : text})} value={this.state.country}/>
+        <TouchableOpacity onPress={this.showDatePicker}><Text style={styles.textInput}>{this.state.selectedDate}</Text></TouchableOpacity>
+        <Button title="Show Date Picker" onPress={this.showDatePicker} />
+      <DateTimePickerModal
+        isVisible={this.state.setDatePickerVisibility}
+        mode="date"
+        onConfirm={this.handleConfirm}
+        onCancel={this.hideDatePicker}
+      />
         <TouchableOpacity style={styles.button2} onPress={this.submit}>
         <Text style={styles.textColor}>{this.state.buttonText}</Text>
         </TouchableOpacity> 
@@ -106,7 +131,8 @@ const styles = StyleSheet.create({
   },
   button: { alignItems: "center" },
   textInput : {
-    width : '80%', backgroundColor : 'white', alignSelf : 'center', marginTop : 10
+    width : '80%', backgroundColor : 'white', alignSelf : 'center', marginTop : 10,
+    height : 50, padding : 10
   }
 });
 

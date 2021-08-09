@@ -25,7 +25,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import database from '@react-native-firebase/database';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {StickyFormExample} from './StickyFormExample'
@@ -59,7 +59,7 @@ const Section = ({children, title}): Node => {
 
 const App: () => Node = () => {
   useEffect(() => {
-    const reference = database().ref('/users');
+    
     
   }, []);
   const isDarkMode = useColorScheme() === 'dark';
