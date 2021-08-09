@@ -26,10 +26,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import database from '@react-native-firebase/database';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {StickyFormExample} from './StickyFormExample'
-import Home from './Home'
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {StickyFormExample} from './StickyFormExample';
+import Home from './Home';
 const Stack = createNativeStackNavigator();
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -60,7 +60,6 @@ const Section = ({children, title}): Node => {
 const App: () => Node = () => {
   useEffect(() => {
     const reference = database().ref('/users');
-    
   }, []);
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -69,9 +68,9 @@ const App: () => Node = () => {
   };
 
   return (
-   <NavigationContainer>
+    <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen name="Form" component={Home} />
+        <Stack.Screen name="Form" component={Home} />
         <Stack.Screen name="Users" component={StickyFormExample} />
       </Stack.Navigator>
     </NavigationContainer>
