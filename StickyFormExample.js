@@ -16,6 +16,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  Animated,
   TextInput
 } from 'react-native';
 import type {IndexPath} from '../../src';
@@ -163,8 +164,10 @@ export class StickyFormExample extends React.Component {
   }
 
   _renderHeader = () => {
+    const transform = [];
+    const zIndex = 9999;
     return (
-      <View style={{height: 80, flexDirection: 'row'}}>
+      <Animated.View  style={{...StyleSheet.flatten({ alignSelf: "stretch", transform, zIndex }), flexDirection : 'row', height : 60}}>
         <View style={styles.text}>
           <Text>Sr.No</Text>
         </View>
@@ -194,7 +197,7 @@ export class StickyFormExample extends React.Component {
           </View>
         ))}
        
-      </View>
+      </Animated.View>
     );
   };
 
@@ -229,23 +232,20 @@ goToDetail = (item) => {
   }
   this.props.navigation.navigate('User', {user})
 }
-  returnTitle = val => {
-    var pattern = new RegExp(
-      '^(https?:\\/\\/)?' +
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' +
-        '((\\d{1,3}\\.){3}\\d{1,3}))' +
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-        '(\\?[;&a-z\\d%_.~+=-]*)?' +
-        '(\\#[-a-z\\d_]*)?$',
-      'i',
-    );
-    return pattern.test(val);
+  returnTitle = str => {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
   };
   _renderItem = (path: IndexPath) => {
     const {data} = this.state;
     const item = data[path.section].items[path.row];
     return (
-      <TouchableOpacity style={styles.row} onPress={() => this.goToDetail(item)}>
+      <TouchableOpacity style={styles.row}>
         <View style={styles.titleText}>
           <Text>{item ? item.title : null}</Text>
         </View>
@@ -275,6 +275,11 @@ goToDetail = (item) => {
               <Image
                 style={{width: 20, marginLeft: 5, height: 20}}
                 source={require('./images/delete.png')}></Image>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.goToDetail(item)}>
+              <Image
+                style={{width: 20, marginLeft: 5, height: 20}}
+                source={require('./images/view.png')}></Image>
             </TouchableOpacity>
           </View>
         </View>
