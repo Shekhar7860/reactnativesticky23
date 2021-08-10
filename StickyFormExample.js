@@ -16,6 +16,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  TextInput
 } from 'react-native';
 import type {IndexPath} from '../../src';
 import database from '@react-native-firebase/database';
@@ -32,6 +33,11 @@ export class StickyFormExample extends React.Component {
         'Date',
         'Actions',
       ],
+      search : '',
+      text : '',
+      secondData: [
+       
+      ],
       data: [
         {
           sectionTitle: 'Data',
@@ -46,16 +52,15 @@ export class StickyFormExample extends React.Component {
 
   _list: StickyForm;
   componentDidMount = () => {
+       let updatedData = [...this.state.data];
     database()
       .ref('/users')
       .once('value')
       .then(dataSnapshot => {
         let newdata = dataSnapshot.val();
-        let updatedData = [...this.state.data];
-
+     
         if (dataSnapshot.val()) {
           let items = Object.values(newdata);
-
           for (let i in items) {
             updatedData[0].items.push({
               key: Object.keys(dataSnapshot.val())[i],
@@ -70,9 +75,56 @@ export class StickyFormExample extends React.Component {
               ],
             });
           }
-          this.setState({data: updatedData});
+          this.setState({data: updatedData, secondData : updatedData});
         }
       });
+  };
+
+  searchFilterFunction = (text) => {
+    let updatedData = [...this.state.data]
+    let secondData = [...this.state.secondData]
+     const s = [...this.state.secondData]
+    if (text != '') {
+      let newData = updatedData[0].items.filter(
+        function (item) {
+          let itemData = item.data[0]
+            ? item.data[0].toUpperCase() + item.data[1].toUpperCase() : ''.toUpperCase();
+          //  console.log('d', itemData, text)
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+      });
+      updatedData[0].items = newData
+    this.setState({data : updatedData})
+    } 
+    else {
+      let updatedData2 = [...this.state.data]
+      database()
+      .ref('/users')
+      .once('value')
+      .then(dataSnapshot => {
+        let newdata = dataSnapshot.val();
+        let updatedData = [...this.state.data];
+        if (dataSnapshot.val()) {
+          let items = Object.values(newdata);
+          for (let i in items) {
+            this.state.data[0].items.push({
+              key: Object.keys(dataSnapshot.val())[i],
+              title: parseInt(i) + parseInt(1),
+              data: [
+                items[i].firstName,
+                items[i].lastName,
+                items[i].age,
+                items[i].profession,
+                items[i].city,
+                items[i].selectedDate,
+              ],
+            });
+          }
+          this.setState({data: this.state.data});
+        }
+      });
+     
+    }
   };
 
   editDelete = (param, path) => {
@@ -95,9 +147,8 @@ export class StickyFormExample extends React.Component {
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
         data={this.state.data}
-        extraData={this.state}
         ref={ref => (this._list = ref)}
-        heightForSection={() => 0}
+        heightForSection={() => 50}
         renderSection={this._renderSection}
         heightForIndexPath={() => 50}
         renderIndexPath={this._renderItem}
@@ -142,6 +193,7 @@ export class StickyFormExample extends React.Component {
             <Text>{title}</Text>
           </View>
         ))}
+       
       </View>
     );
   };
@@ -156,11 +208,27 @@ export class StickyFormExample extends React.Component {
           backgroundColor: 'lightgray',
           justifyContent: 'center',
         }}>
-        <View></View>
+        <View><TextInput
+          style={styles.textInputStyle}
+          onChangeText={(text) => this.searchFilterFunction(text)}
+         
+          underlineColorAndroid="transparent"
+          placeholder="Search Here"
+        /></View>
       </View>
     );
   };
 
+goToDetail = (item) => {
+  let user = {
+    firstName : item.data[0],
+    lastName : item.data[1],
+    age : item.data[2],
+    profession : item.data[3],
+    date : item.data[4]
+  }
+  this.props.navigation.navigate('User', {user})
+}
   returnTitle = val => {
     var pattern = new RegExp(
       '^(https?:\\/\\/)?' +
@@ -177,7 +245,7 @@ export class StickyFormExample extends React.Component {
     const {data} = this.state;
     const item = data[path.section].items[path.row];
     return (
-      <View style={styles.row}>
+      <TouchableOpacity style={styles.row} onPress={() => this.goToDetail(item)}>
         <View style={styles.titleText}>
           <Text>{item ? item.title : null}</Text>
         </View>
@@ -210,7 +278,7 @@ export class StickyFormExample extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 }
