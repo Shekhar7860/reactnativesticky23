@@ -8,15 +8,26 @@ useEffect(() => {
     	setUser(props.route.params.user)
     }
   }, []);
-	  goBack = () => {
+	  
+  const goBack = () => {
     props.navigation.goBack()
   }
 
 	
     const {firstName, lastName, age, profession, city, date} = user
 	return (
-		<View style={styles.container}>
-	
+		<View style={{flex : 1}}>
+		
+	<View style={styles.toolbar}>
+       <TouchableOpacity onPress={() => goBack()}>
+                    <Image style={{width:30,marginLeft:5,  height:30, tintColor : 'white'}}source={require('./images/back.png')}></Image>
+                    </TouchableOpacity>
+                    <Text style={styles.toolbarTitle}>User</Text>
+                    <TouchableOpacity onPress={() => goBack()}>
+                    <Image style={{width:30,marginLeft:5,  height:30}}></Image>
+                    </TouchableOpacity>
+                </View>
+				<View style={styles.container}>
 		<View style={styles.row}>
 		<View style={styles.firstWidth}>
 		<Text>First Name</Text>
@@ -73,6 +84,7 @@ useEffect(() => {
 		</View>
 		</View>
 		</View>
+		</View>
 		)
 }
 
@@ -108,4 +120,21 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  toolbar:{
+    backgroundColor:'#1e3799',
+    paddingBottom:10,
+    flexDirection:'row' ,
+    paddingTop:20   //Step 1
+},
+toolbarButton:{           //Step 2
+    color:'#fff',
+    textAlign:'center'
+},
+toolbarTitle:{
+    color:'#fff',
+    textAlign:'center',
+    fontWeight:'bold',
+    flex:1,
+    fontSize:20                //Step 3
+},
 });

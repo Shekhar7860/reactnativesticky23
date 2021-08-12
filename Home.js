@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  View,Image
 } from 'react-native';
 import moment from 'moment';
 import {SpringScrollView} from 'react-native-spring-scrollview';
@@ -114,6 +115,15 @@ class Home extends React.Component {
   render() {
     return (
       <SpringScrollView>
+        <View style={styles.toolbar}>
+       <TouchableOpacity>
+                    <Image style={{width:30,marginLeft:5,  height:30, tintColor : 'white'}}></Image>
+                    </TouchableOpacity>
+                    <Text style={styles.toolbarTitle}>Form</Text>
+                    <TouchableOpacity>
+                    <Image style={{width:30,marginLeft:5,  height:30}}></Image>
+                    </TouchableOpacity>
+                </View>
         <TextInput
           selectTextOnFocus={true}
           placeholder="Enter First Name"
@@ -179,9 +189,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  textColor :{
+    color : 'white',fontWeight : '700'
+  },
   button2: {
     width: '80%',
-    backgroundColor: 'pink',
+    backgroundColor: '#1e3799',
     alignSelf: 'center',
     marginTop: 30,
     height: 50,
@@ -201,6 +214,23 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: 50,
   },
+  toolbar:{
+    backgroundColor:'#1e3799',
+    paddingBottom:10,
+    flexDirection:'row' ,
+    paddingTop:20   //Step 1
+},
+toolbarButton:{           //Step 2
+    color:'#fff',
+    textAlign:'center'
+},
+toolbarTitle:{
+    color:'#fff',
+    textAlign:'center',
+    fontWeight:'bold',
+    flex:1,
+    fontSize:20                //Step 3
+},
 });
 
 export default Home;

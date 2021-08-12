@@ -9,6 +9,7 @@
 
 import React from 'react';
 import {StickyForm} from './StickyForm';
+import Draggable from 'react-native-draggable';
 import {
   Text,
   View,
@@ -21,6 +22,7 @@ import {
 } from 'react-native';
 import type {IndexPath} from '../../src';
 import database from '@react-native-firebase/database';
+import { Dimensions } from 'react-native';
 export class StickyFormExample extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,7 @@ export class StickyFormExample extends React.Component {
         'Date',
         'Actions',
       ],
+      showHeader : false,
       search : '',
       text : '',
       secondData: [
@@ -47,9 +50,7 @@ export class StickyFormExample extends React.Component {
       ],
     };
   }
-  static navigationOptions = {
-    title: 'StickyFormExample',
-  };
+  
 
   _list: StickyForm;
   componentDidMount = () => {
@@ -149,9 +150,9 @@ export class StickyFormExample extends React.Component {
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
         data={this.state.data}
         ref={ref => (this._list = ref)}
-        heightForSection={() => 50}
         renderSection={this._renderSection}
         heightForIndexPath={() => 50}
+        renderFooter={this._renderFooter}
         renderIndexPath={this._renderItem}
         onRefresh={() => {
           setTimeout(() => this._list.endRefresh(), 2000);
@@ -163,11 +164,53 @@ export class StickyFormExample extends React.Component {
     );
   }
 
+  hideHeader = () => {
+    this.setState({showHeader : !this.state.showHeader})
+  }
+  goBack = () => {
+    props.navigation.goBack()
+  }
+
+  showHeader = () => {
+    this.setState({showHeader : true})
+  }
   _renderHeader = () => {
     const transform = [];
     const zIndex = 9999;
     return (
+      <>
+      <View style={styles.toolbar}>
+      {!this.state.showHeader ?
+      <>
+       <TouchableOpacity onPress={() => this.goBack()}>
+                    <Image style={{width:30,marginLeft:5,  height:30, tintColor : 'white'}} source={require('./images/back.png')}></Image>
+                    </TouchableOpacity>
+                    <Text style={styles.toolbarTitle}>User</Text>
+                    <TouchableOpacity onPress={() => this.showHeader()}>
+                    <Image style={{width:30,marginRight:15,  height:30, tintColor : 'white'}} source={require('./images/search.png')}></Image>
+                    </TouchableOpacity>
+                    </>
+                    : <View style={{flexDirection : 'row', borderWidth : 1, borderColor : 'white', width : '95%', alignSelf : 'center', marginLeft : 5}}>
+                    <Image
+                            style={{width: 15, margin: 14, height: 15, tintColor : 'white'}}
+                            source={require('./images/search.png')}></Image>
+                      <View style={{width : '70%'}}>
+                      <TextInput
+                      style={styles.textInputStyle}
+                      onChangeText={(text) => this.searchFilterFunction(text)}
+                      underlineColorAndroid="transparent"
+                      placeholder="Search Here"
+                      placeholderTextColor='white'
+                    />
+                    </View>
+                    <TouchableOpacity onPress={() => this.hideHeader()}>
+                    <Image
+                            style={{width: 15, margin: 14, height: 15, tintColor : 'white'}}
+                            source={require('./images/close.png')}></Image>
+                            </TouchableOpacity></View> }
+                </View>
       <Animated.View  style={{...StyleSheet.flatten({ alignSelf: "stretch", transform, zIndex }), flexDirection : 'row', height : 60}}>
+        
         <View style={styles.text}>
           <Text>Sr.No</Text>
         </View>
@@ -198,6 +241,19 @@ export class StickyFormExample extends React.Component {
         ))}
        
       </Animated.View>
+      </>
+    );
+  };
+
+  _renderFooter = () => {
+    const transform = [];
+    const zIndex = 9999;
+    return (
+      <Animated.View style={{height : 50, position : 'absolute', bottom : 20}}>
+          <TouchableOpacity style={{marginRight : 80, alignSelf : 'center', alignItems : 'center', width : 50, height : 50, backgroundColor : '#00cec9', borderRadius : 25, justifyContent : 'center'}} onPress={()=> this.props.navigation.navigate('Form')}>
+          <Text style={{color : 'white', fontSize : 20}}>+</Text>
+          </TouchableOpacity>
+      </Animated.View>
     );
   };
 
@@ -211,13 +267,8 @@ export class StickyFormExample extends React.Component {
           backgroundColor: 'lightgray',
           justifyContent: 'center',
         }}>
-        <View><TextInput
-          style={styles.textInputStyle}
-          onChangeText={(text) => this.searchFilterFunction(text)}
-         
-          underlineColorAndroid="transparent"
-          placeholder="Search Here"
-        /></View>
+        
+       
       </View>
     );
   };
@@ -300,7 +351,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#EEE',
+   
   },
   row: {
     flex: 1,
@@ -319,8 +370,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gray',
+    backgroundColor: '#dfe6e9',
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#EEE',
+    
+    borderWidth: StyleSheet.hairlineWidth,
   },
+  toolbar:{
+    width : Dimensions.get('window').width,
+    backgroundColor:'#1e3799',
+    paddingBottom:10,
+    flexDirection:'row' ,
+    paddingTop:20   //Step 1
+},
+toolbarButton:{           //Step 2
+    color:'#fff',
+    textAlign:'center'
+},
+toolbarTitle:{
+    color:'#fff',
+    textAlign:'center',
+    fontWeight:'bold',
+    flex:1,
+    fontSize:20                //Step 3
+},
 });
