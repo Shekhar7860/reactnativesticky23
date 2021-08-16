@@ -39,6 +39,8 @@ export class StickyFormExample extends React.Component {
       showHeader : false,
       search : '',
       text : '',
+      backgroundColor : '#dfe6e9',
+      rowWidth : 300,
       secondData: [
        
       ],
@@ -129,6 +131,13 @@ export class StickyFormExample extends React.Component {
     }
   };
 
+  touchBegin = () => {
+    this.setState({backgroundColor : 'rgba(52, 52, 52, 0.8)', rowWidth : 150})
+  }
+  touchEnd = () => {
+    this.setState({backgroundColor : '#dfe6e9',rowWidth : 300 })
+  }
+
   editDelete = (param, path) => {
     if (param == 'delete') {
       let key = this.state.data[0].items[path.row].key;
@@ -145,6 +154,8 @@ export class StickyFormExample extends React.Component {
     const {data} = this.state;
     return (
       <StickyForm
+      onTouchBegin={this.touchBegin}
+      onTouchEnd={this.touchEnd}
         renderHeader={this._renderHeader}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
@@ -178,7 +189,7 @@ export class StickyFormExample extends React.Component {
     const transform = [];
     const zIndex = 9999;
     return (
-      <>
+      <View>
       <View style={styles.toolbar}>
       {!this.state.showHeader ?
       <>
@@ -210,14 +221,14 @@ export class StickyFormExample extends React.Component {
                             </TouchableOpacity></View> }
                 </View>
       <Animated.View  style={{...StyleSheet.flatten({ alignSelf: "stretch", transform, zIndex }), flexDirection : 'row', height : 60}}>
-        
-        <View style={styles.text}>
+        <View style={{...styles.text, width : this.state.rowWidth}}>
           <Text>Sr.No</Text>
         </View>
         {this.state.titles.map((title, index) => (
           <View
             style={{
               ...styles.headerText,
+              width : 80,
               backgroundColor:
                 title == 'First Name'
                   ? '#e67e22'
@@ -239,9 +250,8 @@ export class StickyFormExample extends React.Component {
             <Text>{title}</Text>
           </View>
         ))}
-       
       </Animated.View>
-      </>
+      </View>
     );
   };
 
@@ -296,13 +306,14 @@ goToDetail = (item) => {
     const {data} = this.state;
     const item = data[path.section].items[path.row];
     return (
-      <TouchableOpacity style={styles.row}>
-        <View style={styles.titleText}>
+      <TouchableOpacity style={{...styles.row}}>
+        <View style={{...styles.titleText, backgroundColor : this.state.backgroundColor, width  : this.state.rowWidth}}>
           <Text>{item ? item.title : null}</Text>
         </View>
+      
         {item
           ? item.data.map((title, index) => (
-              <View style={styles.text} key={index}>
+              <View style={{...styles.text}} key={index}>
                 {this.returnTitle(title) == true ? (
                   <Text
                     onPress={() => Linking.openURL(title)}
@@ -315,6 +326,7 @@ goToDetail = (item) => {
               </View>
             ))
           : null}
+      
         <View style={styles.text}>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.editDelete('edit', path)}>
@@ -346,7 +358,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    flex: 1,
+    width : 80,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
@@ -354,11 +366,10 @@ const styles = StyleSheet.create({
    
   },
   row: {
-    flex: 1,
+    height : 50,
     flexDirection: 'row',
   },
   headerText: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EEE',
@@ -367,10 +378,9 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
   },
   titleText: {
-    flex: 1,
+  
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#dfe6e9',
     borderWidth: StyleSheet.hairlineWidth,
     
     borderWidth: StyleSheet.hairlineWidth,

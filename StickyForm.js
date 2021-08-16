@@ -36,6 +36,8 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
     return (
       <LargeList
         {...this.props}
+        onTouchBegin={this.props.onTouchBegin}
+        onTouchEnd={this.props.onTouchEnd}
         extraData={this.props}
         ref={this._largeList}
         renderHeader={this._renderHeader}

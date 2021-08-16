@@ -338,6 +338,8 @@ export class LargeList extends React.PureComponent<LargeListPropType> {
       <SpringScrollView
         contentStyle={{ flex: 1 }}
         {...this.props}
+         onTouchBegin={this.props.TouchBegin}
+         onTouchEnd={this.props.TouchEnd}
         ref={this._scrollView}
         onSizeChange={this._onSizeChange}
         onNativeContentOffsetExtract={this._nativeOffset}

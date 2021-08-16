@@ -36,14 +36,7 @@ export class Group extends React.Component<GroupPropType> {
   };
 
   update(index: number, init: boolean) {
-    if (
-      index < 0 ||
-      index >= this.props.indexes.length ||
-      this._currentIndex === index
-    )
-      return;
-    this._currentIndex = index;
-    !init && this.forceUpdate();
+    
   }
 
   shouldComponentUpdate(nextProps, nextState) {
