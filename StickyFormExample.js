@@ -41,6 +41,7 @@ export class StickyFormExample extends React.Component {
       text : '',
       backgroundColor : '#dfe6e9',
       rowWidth : 300,
+      rowWidth2 : 300,
       secondData: [
        
       ],
@@ -131,7 +132,7 @@ export class StickyFormExample extends React.Component {
     }
   };
 
-  touchBegin = () => {
+  touchBegin = ({nativeEvent:{contentOffset:{x, y}}}) => {
     this.setState({backgroundColor : 'rgba(52, 52, 52, 0.8)', rowWidth : 150})
   }
   touchEnd = () => {
@@ -154,8 +155,7 @@ export class StickyFormExample extends React.Component {
     const {data} = this.state;
     return (
       <StickyForm
-      onTouchBegin={this.touchBegin}
-      onTouchEnd={this.touchEnd}
+      onScroll={this.touchBegin}
         renderHeader={this._renderHeader}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
@@ -221,7 +221,7 @@ export class StickyFormExample extends React.Component {
                             </TouchableOpacity></View> }
                 </View>
       <Animated.View  style={{...StyleSheet.flatten({ alignSelf: "stretch", transform, zIndex }), flexDirection : 'row', height : 60}}>
-        <View style={{...styles.text, width : this.state.rowWidth}}>
+        <View style={{...styles.text, width : 150}}>
           <Text>Sr.No</Text>
         </View>
         {this.state.titles.map((title, index) => (
@@ -303,10 +303,12 @@ goToDetail = (item) => {
   return !!pattern.test(str);
   };
   _renderItem = (path: IndexPath) => {
+
     const {data} = this.state;
     const item = data[path.section].items[path.row];
     return (
       <TouchableOpacity style={{...styles.row}}>
+       
         <View style={{...styles.titleText, backgroundColor : this.state.backgroundColor, width  : this.state.rowWidth}}>
           <Text>{item ? item.title : null}</Text>
         </View>
@@ -346,6 +348,7 @@ goToDetail = (item) => {
             </TouchableOpacity>
           </View>
         </View>
+    
       </TouchableOpacity>
     );
   };
