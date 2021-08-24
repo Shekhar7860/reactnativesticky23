@@ -74,7 +74,7 @@
        <Stack.Navigator screenOptions={{
     headerShown: false
   }}>
-       {/* <Stack.Screen name="Form" component={Home} /> */}
+       <Stack.Screen name="Form" component={Home} />
          <Stack.Screen name="Users" component={StickyFormExample} />
          <Stack.Screen name="User" component={User} />
        </Stack.Navigator>

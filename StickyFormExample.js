@@ -42,6 +42,7 @@ export class StickyFormExample extends React.Component {
       backgroundColor : '#dfe6e9',
       rowWidth : 300,
       rowWidth2 : 300,
+      headerWidth : Dimensions.get('window').width,
       secondData: [
        
       ],
@@ -52,6 +53,18 @@ export class StickyFormExample extends React.Component {
         },
       ],
     };
+    for (let i = 0; i < props.groupCount; ++i) {
+      this._groupRefs.push(React.createRef());
+    }
+    if (props.initialContentOffset) {
+      this._contentOffsetY = props.initialContentOffset.y;
+    }
+    this._nativeOffset = {
+      x: new Animated.Value(0),
+      y: new Animated.Value(0),
+      ...this.props.onNativeContentOffsetExtract,
+    };
+    this._offset = this._nativeOffset.y;
   }
   
 
@@ -133,10 +146,11 @@ export class StickyFormExample extends React.Component {
   };
 
   touchBegin = ({nativeEvent:{contentOffset:{x, y}}}) => {
-    this.setState({backgroundColor : 'rgba(52, 52, 52, 0.8)', rowWidth : 150})
+    this.setState({backgroundColor : 'rgba(52, 52, 52, 0.8)', rowWidth : 300 - x})
+
   }
   touchEnd = () => {
-    this.setState({backgroundColor : '#dfe6e9',rowWidth : 300 })
+    this.setState({backgroundColor : '#dfe6e9'})
   }
 
   editDelete = (param, path) => {
@@ -156,15 +170,17 @@ export class StickyFormExample extends React.Component {
     return (
       <StickyForm
       onScroll={this.touchBegin}
-        renderHeader={this._renderHeader}
+        renderHeader={null}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
         data={this.state.data}
         ref={ref => (this._list = ref)}
-        renderSection={this._renderSection}
+        renderSection={this._renderHeader}
         heightForIndexPath={() => 50}
         renderFooter={this._renderFooter}
         renderIndexPath={this._renderItem}
+        rowWidth={this.state.rowWidth}
+        // onScroll={this._onScroll}
         onRefresh={() => {
           setTimeout(() => this._list.endRefresh(), 2000);
         }}
@@ -174,6 +190,7 @@ export class StickyFormExample extends React.Component {
       />
     );
   }
+
 
   hideHeader = () => {
     this.setState({showHeader : !this.state.showHeader})
@@ -185,12 +202,58 @@ export class StickyFormExample extends React.Component {
   showHeader = () => {
     this.setState({showHeader : true})
   }
+
   _renderHeader = () => {
     const transform = [];
     const zIndex = 9999;
     return (
+      <TouchableOpacity style={{...styles.row}}>
+        <View style={{...styles.titleText, minWidth : 180, backgroundColor : this.state.rowWidth == 300 ? '#dfe6e9' : this.state.backgroundColor, width  : this.state.rowWidth}}>
+          <Text>Sr. no</Text>
+        </View>
+      
+        {this.state.titles.map((title, index) => (
+          <View
+            style={{
+              ...styles.headerText,
+              width : 80,
+              backgroundColor:
+                title == 'First Name'
+                  ? '#e67e22'
+                  : title == 'Last Name'
+                  ? '#c0392b'
+                  : title == 'Age'
+                  ? '#8e44ad'
+                  : title == 'Proffession'
+                  ? '#27ae60'
+                  : title == 'City'
+                  ? '#eccc68'
+                  : title == 'Date'
+                  ? '#eb3b5a'
+                  : title == 'Actions'
+                  ? '#95a5a6'
+                  : 'white',
+            }}
+            key={index}>
+            <Text>{title}</Text>
+          </View>
+        ))}
+      
+        
+    
+      </TouchableOpacity>
+      
+      
+    );
+  };
+  _renderHeader2 = () => {
+    const transform = [];
+    const zIndex = 9999;
+    return (
+
+      
       <View>
-      <View style={styles.toolbar}>
+      <View style={{...styles.toolbar, width : this.state.headerWidth}}>
       {!this.state.showHeader ?
       <>
        <TouchableOpacity onPress={() => this.goBack()}>
@@ -220,37 +283,7 @@ export class StickyFormExample extends React.Component {
                             source={require('./images/close.png')}></Image>
                             </TouchableOpacity></View> }
                 </View>
-      <Animated.View  style={{...StyleSheet.flatten({ alignSelf: "stretch", transform, zIndex }), flexDirection : 'row', height : 60}}>
-        <View style={{...styles.text, width : 150}}>
-          <Text>Sr.No</Text>
-        </View>
-        {this.state.titles.map((title, index) => (
-          <View
-            style={{
-              ...styles.headerText,
-              width : 80,
-              backgroundColor:
-                title == 'First Name'
-                  ? '#e67e22'
-                  : title == 'Last Name'
-                  ? '#c0392b'
-                  : title == 'Age'
-                  ? '#8e44ad'
-                  : title == 'Proffession'
-                  ? '#27ae60'
-                  : title == 'City'
-                  ? '#eccc68'
-                  : title == 'Date'
-                  ? '#eb3b5a'
-                  : title == 'Actions'
-                  ? '#95a5a6'
-                  : 'white',
-            }}
-            key={index}>
-            <Text>{title}</Text>
-          </View>
-        ))}
-      </Animated.View>
+     
       </View>
     );
   };
@@ -309,7 +342,7 @@ goToDetail = (item) => {
     return (
       <TouchableOpacity style={{...styles.row}}>
        
-        <View style={{...styles.titleText, backgroundColor : this.state.backgroundColor, width  : this.state.rowWidth}}>
+        <View style={{...styles.titleText, minWidth : 180, backgroundColor : this.state.rowWidth == 300 ? '#dfe6e9' : this.state.backgroundColor, width  : this.state.rowWidth}}>
           <Text>{item ? item.title : null}</Text>
         </View>
       
@@ -389,7 +422,6 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
   },
   toolbar:{
-    width : Dimensions.get('window').width,
     backgroundColor:'#1e3799',
     paddingBottom:10,
     flexDirection:'row' ,

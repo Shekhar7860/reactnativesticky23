@@ -237,7 +237,8 @@ export class LargeList extends React.PureComponent<LargeListPropType> {
           contentStyle,
         ])}
         onNativeContentOffsetExtract={this._nativeOffset}
-        onScroll={this._onScroll}
+        onScroll={this.props.onScroll}
+        // onScroll={this._onScroll}
         onMomentumScrollEnd={this._onScrollEnd}
       >
         {shouldRenderContent &&
@@ -343,6 +344,7 @@ export class LargeList extends React.PureComponent<LargeListPropType> {
         ref={this._scrollView}
         onSizeChange={this._onSizeChange}
         onNativeContentOffsetExtract={this._nativeOffset}
+        onScrollEnd={this.props.onScrollEnd}
         onScroll={this._onScroll}
       >
         {this._renderHeader && this._renderHeader()}
@@ -446,25 +448,25 @@ export class LargeList extends React.PureComponent<LargeListPropType> {
   };
 
   _onScroll = (e) => {
-    const offsetY = e.nativeEvent.contentOffset.y;
-    this._contentOffsetY = offsetY;
-    this._shouldUpdateContent &&
-      idx(() =>
-        this._sectionRefs.forEach((sectionRef) => {
-          sectionRef.current.updateOffset(this._contentOffsetY);
-        })
-      );
-    this.props.onScroll && this.props.onScroll(e);
-    const now = new Date().getTime();
-    if (this._lastTick - now > 30) {
-      this._lastTick = now;
-      return;
-    }
-    this._lastTick = now;
-    this._shouldUpdateContent &&
-      this._groupRefs.forEach((group) =>
-        idx(() => group.current.contentConversion(offsetY))
-      );
+    //  const offsetY = e.nativeEvent.contentOffset.y;
+    // this._contentOffsetY = offsetY;
+    // this._shouldUpdateContent &&
+    //   idx(() =>
+    //     this._sectionRefs.forEach((sectionRef) => {
+    //       sectionRef.current.updateOffset(this._contentOffsetY);
+    //     })
+    //   );
+    // this.props.onScroll && this.props.onScroll(e);
+    // const now = new Date().getTime();
+    // if (this._lastTick - now > 30) {
+    //   this._lastTick = now;
+    //   return;
+    // }
+    // this._lastTick = now;
+    // this._shouldUpdateContent &&
+    //   this._groupRefs.forEach((group) =>
+    //     idx(() => group.current.contentConversion(offsetY))
+    //   );
   };
 
   scrollTo(offset: Offset, animated: boolean = true): Promise<void> {

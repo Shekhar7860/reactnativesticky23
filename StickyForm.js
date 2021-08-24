@@ -36,9 +36,8 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
     return (
       <LargeList
         {...this.props}
-        
-        
-        onScroll={this.props.onScroll}
+       
+        onScrollEndDrag={this.props.onScrollEndDrag}
         extraData={this.props}
         ref={this._largeList}
         renderHeader={this._renderHeader}
@@ -81,12 +80,15 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
         transform: [{ translateX: this._offset.interpolate({ inputRange: [-1, 0, 1], outputRange: [0, 0, 1] }) }]
       }
     ]);
+    const style2 = StyleSheet.flatten([
+      sticky.props.style
+    ]);
     return React.cloneElement(
       view,
       null,
       childArray.map((v, index) => {
         if (index > 0) return React.cloneElement(v, { key: index });
-        return <Animated.View {...v.props} style={style} key={index} />;
+        return <Animated.View {...v.props} style={this.props.rowWidth <= 220 ? style : style2} key={index} />;
       })
     );
   }
