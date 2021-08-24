@@ -18,11 +18,11 @@ import {
   TouchableOpacity,
   Linking,
   Animated,
-  TextInput
+  TextInput,
 } from 'react-native';
 import type {IndexPath} from '../../src';
 import database from '@react-native-firebase/database';
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
 export class StickyFormExample extends React.Component {
   constructor(props) {
     super(props);
@@ -36,16 +36,14 @@ export class StickyFormExample extends React.Component {
         'Date',
         'Actions',
       ],
-      showHeader : false,
-      search : '',
-      text : '',
-      backgroundColor : '#dfe6e9',
-      rowWidth : 300,
-      rowWidth2 : 300,
-      headerWidth : Dimensions.get('window').width,
-      secondData: [
-       
-      ],
+      showHeader: false,
+      search: '',
+      text: '',
+      backgroundColor: '#dfe6e9',
+      rowWidth: 300,
+      rowWidth2: 300,
+      headerWidth: Dimensions.get('window').width,
+      secondData: [],
       data: [
         {
           sectionTitle: 'Data',
@@ -66,17 +64,16 @@ export class StickyFormExample extends React.Component {
     };
     this._offset = this._nativeOffset.y;
   }
-  
 
   _list: StickyForm;
   componentDidMount = () => {
-       let updatedData = [...this.state.data];
+    let updatedData = [...this.state.data];
     database()
       .ref('/users')
       .once('value')
       .then(dataSnapshot => {
         let newdata = dataSnapshot.val();
-     
+
         if (dataSnapshot.val()) {
           let items = Object.values(newdata);
           for (let i in items) {
@@ -93,65 +90,71 @@ export class StickyFormExample extends React.Component {
               ],
             });
           }
-          this.setState({data: updatedData, secondData : updatedData});
+          this.setState({data: updatedData, secondData: updatedData});
         }
       });
   };
 
-  searchFilterFunction = (text) => {
-    let updatedData = [...this.state.data]
-    let secondData = [...this.state.secondData]
-     const s = [...this.state.secondData]
+  searchFilterFunction = text => {
+    let updatedData = [...this.state.data];
+    let secondData = [...this.state.secondData];
+    const s = [...this.state.secondData];
     if (text != '') {
-      let newData = updatedData[0].items.filter(
-        function (item) {
-          let itemData = item.data[0]
-            ? item.data[0].toUpperCase() + item.data[1].toUpperCase() : ''.toUpperCase();
-          //  console.log('d', itemData, text)
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
+      let newData = updatedData[0].items.filter(function (item) {
+        let itemData = item.data[0]
+          ? item.data[0].toUpperCase() + item.data[1].toUpperCase()
+          : ''.toUpperCase();
+        //  console.log('d', itemData, text)
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
       });
-      updatedData[0].items = newData
-    this.setState({data : updatedData})
-    } 
-    else {
-      let updatedData2 = [...this.state.data]
+      updatedData[0].items = newData;
+      this.setState({data: updatedData});
+    } else {
+      let updatedData2 = [...this.state.data];
       database()
-      .ref('/users')
-      .once('value')
-      .then(dataSnapshot => {
-        let newdata = dataSnapshot.val();
-        let updatedData = [...this.state.data];
-        if (dataSnapshot.val()) {
-          let items = Object.values(newdata);
-          for (let i in items) {
-            this.state.data[0].items.push({
-              key: Object.keys(dataSnapshot.val())[i],
-              title: parseInt(i) + parseInt(1),
-              data: [
-                items[i].firstName,
-                items[i].lastName,
-                items[i].age,
-                items[i].profession,
-                items[i].city,
-                items[i].selectedDate,
-              ],
-            });
+        .ref('/users')
+        .once('value')
+        .then(dataSnapshot => {
+          let newdata = dataSnapshot.val();
+          let updatedData = [...this.state.data];
+          if (dataSnapshot.val()) {
+            let items = Object.values(newdata);
+            for (let i in items) {
+              this.state.data[0].items.push({
+                key: Object.keys(dataSnapshot.val())[i],
+                title: parseInt(i) + parseInt(1),
+                data: [
+                  items[i].firstName,
+                  items[i].lastName,
+                  items[i].age,
+                  items[i].profession,
+                  items[i].city,
+                  items[i].selectedDate,
+                ],
+              });
+            }
+            this.setState({data: this.state.data});
           }
-          this.setState({data: this.state.data});
-        }
-      });
-     
+        });
     }
   };
 
-  touchBegin = ({nativeEvent:{contentOffset:{x, y}}}) => {
-    this.setState({backgroundColor : 'rgba(52, 52, 52, 0.8)', rowWidth : 300 - x})
-
-  }
+  touchBegin = ({
+    nativeEvent: {
+      contentOffset: {x, y},
+    },
+  }) => {
+    this.setState({
+      backgroundColor: 'rgba(52, 52, 52, 0.8)',
+    });
+    if (x >= 100) {
+      this.setState({rowWidth: 300 - x});
+    }
+  };
   touchEnd = () => {
-    this.setState({backgroundColor : '#dfe6e9'})
-  }
+    this.setState({backgroundColor: '#dfe6e9'});
+  };
 
   editDelete = (param, path) => {
     if (param == 'delete') {
@@ -169,7 +172,7 @@ export class StickyFormExample extends React.Component {
     const {data} = this.state;
     return (
       <StickyForm
-      onScroll={this.touchBegin}
+        onScroll={this.touchBegin}
         renderHeader={null}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
@@ -191,32 +194,40 @@ export class StickyFormExample extends React.Component {
     );
   }
 
-
   hideHeader = () => {
-    this.setState({showHeader : !this.state.showHeader})
-  }
+    this.setState({showHeader: !this.state.showHeader});
+  };
   goBack = () => {
-    props.navigation.goBack()
-  }
+    props.navigation.goBack();
+  };
 
   showHeader = () => {
-    this.setState({showHeader : true})
-  }
+    this.setState({showHeader: true});
+  };
 
   _renderHeader = () => {
     const transform = [];
     const zIndex = 9999;
     return (
       <TouchableOpacity style={{...styles.row}}>
-        <View style={{...styles.titleText, minWidth : 180, backgroundColor : this.state.rowWidth == 300 ? '#dfe6e9' : this.state.backgroundColor, width  : this.state.rowWidth}}>
+        <View
+          style={{
+            ...styles.titleText,
+            minWidth: 180,
+            backgroundColor:
+              this.state.rowWidth == 300
+                ? '#dfe6e9'
+                : this.state.backgroundColor,
+            width: this.state.rowWidth,
+          }}>
           <Text>Sr. no</Text>
         </View>
-      
+
         {this.state.titles.map((title, index) => (
           <View
             style={{
               ...styles.headerText,
-              width : 80,
+              width: 80,
               backgroundColor:
                 title == 'First Name'
                   ? '#e67e22'
@@ -238,52 +249,74 @@ export class StickyFormExample extends React.Component {
             <Text>{title}</Text>
           </View>
         ))}
-      
-        
-    
       </TouchableOpacity>
-      
-      
     );
   };
   _renderHeader2 = () => {
     const transform = [];
     const zIndex = 9999;
     return (
-
-      
       <View>
-      <View style={{...styles.toolbar, width : this.state.headerWidth}}>
-      {!this.state.showHeader ?
-      <>
-       <TouchableOpacity onPress={() => this.goBack()}>
-                    <Image style={{width:30,marginLeft:5,  height:30, tintColor : 'white'}} source={require('./images/back.png')}></Image>
-                    </TouchableOpacity>
-                    <Text style={styles.toolbarTitle}>User</Text>
-                    <TouchableOpacity onPress={() => this.showHeader()}>
-                    <Image style={{width:30,marginRight:15,  height:30, tintColor : 'white'}} source={require('./images/search.png')}></Image>
-                    </TouchableOpacity>
-                    </>
-                    : <View style={{flexDirection : 'row', borderWidth : 1, borderColor : 'white', width : '95%', alignSelf : 'center', marginLeft : 5}}>
-                    <Image
-                            style={{width: 15, margin: 14, height: 15, tintColor : 'white'}}
-                            source={require('./images/search.png')}></Image>
-                      <View style={{width : '70%'}}>
-                      <TextInput
-                      style={styles.textInputStyle}
-                      onChangeText={(text) => this.searchFilterFunction(text)}
-                      underlineColorAndroid="transparent"
-                      placeholder="Search Here"
-                      placeholderTextColor='white'
-                    />
-                    </View>
-                    <TouchableOpacity onPress={() => this.hideHeader()}>
-                    <Image
-                            style={{width: 15, margin: 14, height: 15, tintColor : 'white'}}
-                            source={require('./images/close.png')}></Image>
-                            </TouchableOpacity></View> }
-                </View>
-     
+        <View style={{...styles.toolbar, width: this.state.headerWidth}}>
+          {!this.state.showHeader ? (
+            <>
+              <TouchableOpacity onPress={() => this.goBack()}>
+                <Image
+                  style={{
+                    width: 30,
+                    marginLeft: 5,
+                    height: 30,
+                    tintColor: 'white',
+                  }}
+                  source={require('./images/back.png')}></Image>
+              </TouchableOpacity>
+              <Text style={styles.toolbarTitle}>User</Text>
+              <TouchableOpacity onPress={() => this.showHeader()}>
+                <Image
+                  style={{
+                    width: 30,
+                    marginRight: 15,
+                    height: 30,
+                    tintColor: 'white',
+                  }}
+                  source={require('./images/search.png')}></Image>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <View
+              style={{
+                flexDirection: 'row',
+                borderWidth: 1,
+                borderColor: 'white',
+                width: '95%',
+                alignSelf: 'center',
+                marginLeft: 5,
+              }}>
+              <Image
+                style={{width: 15, margin: 14, height: 15, tintColor: 'white'}}
+                source={require('./images/search.png')}></Image>
+              <View style={{width: '70%'}}>
+                <TextInput
+                  style={styles.textInputStyle}
+                  onChangeText={text => this.searchFilterFunction(text)}
+                  underlineColorAndroid="transparent"
+                  placeholder="Search Here"
+                  placeholderTextColor="white"
+                />
+              </View>
+              <TouchableOpacity onPress={() => this.hideHeader()}>
+                <Image
+                  style={{
+                    width: 15,
+                    margin: 14,
+                    height: 15,
+                    tintColor: 'white',
+                  }}
+                  source={require('./images/close.png')}></Image>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
     );
   };
@@ -292,10 +325,21 @@ export class StickyFormExample extends React.Component {
     const transform = [];
     const zIndex = 9999;
     return (
-      <Animated.View style={{height : 50, position : 'absolute', bottom : 20}}>
-          <TouchableOpacity style={{marginRight : 80, alignSelf : 'center', alignItems : 'center', width : 50, height : 50, backgroundColor : '#00cec9', borderRadius : 25, justifyContent : 'center'}} onPress={()=> this.props.navigation.navigate('Form')}>
-          <Text style={{color : 'white', fontSize : 20}}>+</Text>
-          </TouchableOpacity>
+      <Animated.View style={{height: 50, position: 'absolute', bottom: 20}}>
+        <TouchableOpacity
+          style={{
+            marginRight: 80,
+            alignSelf: 'center',
+            alignItems: 'center',
+            width: 50,
+            height: 50,
+            backgroundColor: '#00cec9',
+            borderRadius: 25,
+            justifyContent: 'center',
+          }}
+          onPress={() => this.props.navigation.navigate('Form')}>
+          <Text style={{color: 'white', fontSize: 20}}>+</Text>
+        </TouchableOpacity>
       </Animated.View>
     );
   };
@@ -309,43 +353,50 @@ export class StickyFormExample extends React.Component {
           flex: 1,
           backgroundColor: 'lightgray',
           justifyContent: 'center',
-        }}>
-        
-       
-      </View>
+        }}></View>
     );
   };
 
-goToDetail = (item) => {
-  let user = {
-    firstName : item.data[0],
-    lastName : item.data[1],
-    age : item.data[2],
-    profession : item.data[3],
-    date : item.data[4]
-  }
-  this.props.navigation.navigate('User', {user})
-}
+  goToDetail = item => {
+    let user = {
+      firstName: item.data[0],
+      lastName: item.data[1],
+      age: item.data[2],
+      profession: item.data[3],
+      date: item.data[4],
+    };
+    this.props.navigation.navigate('User', {user});
+  };
   returnTitle = str => {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-  return !!pattern.test(str);
+    var pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i',
+    ); // fragment locator
+    return !!pattern.test(str);
   };
   _renderItem = (path: IndexPath) => {
-
     const {data} = this.state;
     const item = data[path.section].items[path.row];
     return (
       <TouchableOpacity style={{...styles.row}}>
-       
-        <View style={{...styles.titleText, minWidth : 180, backgroundColor : this.state.rowWidth == 300 ? '#dfe6e9' : this.state.backgroundColor, width  : this.state.rowWidth}}>
+        <View
+          style={{
+            ...styles.titleText,
+            minWidth: 180,
+            backgroundColor:
+              this.state.rowWidth == 300
+                ? '#dfe6e9'
+                : this.state.backgroundColor,
+            width: this.state.rowWidth,
+          }}>
           <Text>{item ? item.title : null}</Text>
         </View>
-      
+
         {item
           ? item.data.map((title, index) => (
               <View style={{...styles.text}} key={index}>
@@ -361,7 +412,7 @@ goToDetail = (item) => {
               </View>
             ))
           : null}
-      
+
         <View style={styles.text}>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.editDelete('edit', path)}>
@@ -381,7 +432,6 @@ goToDetail = (item) => {
             </TouchableOpacity>
           </View>
         </View>
-    
       </TouchableOpacity>
     );
   };
@@ -394,15 +444,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    width : 80,
+    width: 80,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: StyleSheet.hairlineWidth,
-   
   },
   row: {
-    height : 50,
+    height: 50,
     flexDirection: 'row',
   },
   headerText: {
@@ -414,28 +463,28 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
   },
   titleText: {
-  
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: StyleSheet.hairlineWidth,
-    
+
     borderWidth: StyleSheet.hairlineWidth,
   },
-  toolbar:{
-    backgroundColor:'#1e3799',
-    paddingBottom:10,
-    flexDirection:'row' ,
-    paddingTop:20   //Step 1
-},
-toolbarButton:{           //Step 2
-    color:'#fff',
-    textAlign:'center'
-},
-toolbarTitle:{
-    color:'#fff',
-    textAlign:'center',
-    fontWeight:'bold',
-    flex:1,
-    fontSize:20                //Step 3
-},
+  toolbar: {
+    backgroundColor: '#1e3799',
+    paddingBottom: 10,
+    flexDirection: 'row',
+    paddingTop: 20, //Step 1
+  },
+  toolbarButton: {
+    //Step 2
+    color: '#fff',
+    textAlign: 'center',
+  },
+  toolbarTitle: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    flex: 1,
+    fontSize: 20, //Step 3
+  },
 });

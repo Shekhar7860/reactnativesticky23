@@ -7,36 +7,33 @@
  *
  */
 
-import React from "react";
-import { StickyFormPropType } from "./Types";
-import type {IndexPath, LargeListPropType, Offset, Size} from "./Types";
-import { Animated, StyleSheet } from "react-native";
-import { LargeList } from "./LargeList";
-import {idx} from "./idx";
+import React from 'react';
+import {StickyFormPropType} from './Types';
+import type {IndexPath, LargeListPropType, Offset, Size} from './Types';
+import {Animated, StyleSheet} from 'react-native';
+import {LargeList} from './LargeList';
+import {idx} from './idx';
 
 export class StickyForm extends React.PureComponent<StickyFormPropType> {
   _size: Size;
   _contentOffsetY = 0;
   _nativeOffset;
   _offset: Animated.Value;
-  _largeList=React.createRef();
+  _largeList = React.createRef();
 
   constructor(props) {
     super(props);
     this._nativeOffset = {
       x: new Animated.Value(0),
-      ...this.props.onNativeContentOffsetExtract
+      ...this.props.onNativeContentOffsetExtract,
     };
     this._offset = this._nativeOffset.x;
   }
 
-  
   render() {
-    
     return (
       <LargeList
         {...this.props}
-       
         onScrollEndDrag={this.props.onScrollEndDrag}
         extraData={this.props}
         ref={this._largeList}
@@ -50,13 +47,13 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
   }
 
   _renderHeader = () => {
-    const { renderHeader } = this.props;
+    const {renderHeader} = this.props;
     if (!renderHeader || !renderHeader()) return null;
     return this._stickyFirstView(this.props.renderHeader());
   };
 
   _renderFooter = () => {
-    const { renderFooter } = this.props;
+    const {renderFooter} = this.props;
     if (!renderFooter || !renderFooter()) return null;
     return this._stickyFirstView(renderFooter());
   };
@@ -77,24 +74,38 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
       sticky.props.style,
       {
         zIndex: 9999,
-        transform: [{ translateX: this._offset.interpolate({ inputRange: [-1, 0, 1], outputRange: [0, 0, 1] }) }]
-      }
+        transform: [
+          {
+            translateX: this._offset.interpolate({
+              inputRange: [-1, 0, 1],
+              outputRange: [0, 0, 1],
+            }),
+          },
+        ],
+      },
     ]);
-    const style2 = StyleSheet.flatten([
-      sticky.props.style
-    ]);
+
+    // console.log('fff', sticky.props.style);
+    const style2 = StyleSheet.flatten([sticky.props.style]);
     return React.cloneElement(
       view,
       null,
       childArray.map((v, index) => {
-        if (index > 0) return React.cloneElement(v, { key: index });
-        return <Animated.View {...v.props} style={this.props.rowWidth <= 220 ? style : style2} key={index} />;
-      })
+        if (index > 0) return React.cloneElement(v, {key: index});
+        return (
+          <Animated.View
+            {...v.props}
+            style={this.props.rowWidth <= 220 ? style : style2}
+            key={index}
+          />
+        );
+      }),
     );
   }
 
   scrollTo(offset: Offset, animated: boolean = true): Promise<void> {
-    if (!this._largeList.current) return Promise.reject("StickyForm has not been initialized yet!");
+    if (!this._largeList.current)
+      return Promise.reject('StickyForm has not been initialized yet!');
     return this._largeList.current.scrollTo(offset, animated).then(() => {
       return Promise.resolve();
     });
@@ -110,6 +121,6 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
 
   static defaultProps = {
     directionalLockEnabled: true,
-    headerStickyEnabled: true
+    headerStickyEnabled: true,
   };
 }
