@@ -36,6 +36,7 @@ export class StickyFormExample extends React.Component {
         'Date',
         'Actions',
       ],
+      opacity :1,
       showHeader: false,
       search: '',
       text: '',
@@ -50,6 +51,14 @@ export class StickyFormExample extends React.Component {
           items: [],
         },
       ],
+      data3 : [
+        {
+          sectionTitle: "基本参数",
+          items: [
+            
+          ],
+        },
+      ]
     };
     for (let i = 0; i < props.groupCount; ++i) {
       this._groupRefs.push(React.createRef());
@@ -68,31 +77,49 @@ export class StickyFormExample extends React.Component {
   _list: StickyForm;
   componentDidMount = () => {
     let updatedData = [...this.state.data];
-    database()
-      .ref('/users')
-      .once('value')
-      .then(dataSnapshot => {
-        let newdata = dataSnapshot.val();
+    // database()
+    //   .ref('/users')
+    //   .once('value')
+    //   .then(dataSnapshot => {
+    //     let newdata = dataSnapshot.val();
 
-        if (dataSnapshot.val()) {
-          let items = Object.values(newdata);
-          for (let i in items) {
-            updatedData[0].items.push({
-              key: Object.keys(dataSnapshot.val())[i],
-              title: parseInt(i) + parseInt(1),
-              data: [
-                items[i].firstName,
-                items[i].lastName,
-                items[i].age,
-                items[i].profession,
-                items[i].city,
-                items[i].selectedDate,
-              ],
-            });
-          }
-          this.setState({data: updatedData, secondData: updatedData});
-        }
-      });
+    //     if (dataSnapshot.val()) {
+    //       let items = Object.values(newdata);
+    //       for (let i in items) {
+    //         updatedData[0].items.push({
+    //           key: Object.keys(dataSnapshot.val())[i],
+    //           title: parseInt(i) + parseInt(1),
+    //           data: [
+    //             items[i].firstName,
+    //             items[i].lastName,
+    //             items[i].age,
+    //             items[i].profession,
+    //             items[i].city,
+    //             items[i].selectedDate,
+    //           ],
+    //         });
+    //       }
+    //       this.setState({data: updatedData, secondData: updatedData});
+    //     }
+    //   });
+
+            for(let i = 1;i<20000;i++)
+            {
+              updatedData[0].items.push({
+                key: i,
+                title: 'item',
+                data: [
+                  'shekhar',
+                  'chugh',
+                  29,
+                  'developer',
+                  'patiala',
+                  '20/08/1992',
+                ],
+              });
+            }
+            
+            this.setState({data3: updatedData, secondData: updatedData});
   };
 
   searchFilterFunction = text => {
@@ -145,21 +172,34 @@ export class StickyFormExample extends React.Component {
       contentOffset: {x, y},
     },
   }) => {
+    // this.setState({
+    //   backgroundColor: 'rgba(52, 52, 52, 0.8)',
+    // });
     this.setState({
-      backgroundColor: 'rgba(52, 52, 52, 0.8)',
-    });
+      opacity : 0.5
+    })
     if (x >= 100) {
       this.setState({rowWidth: 300 - x});
     }
+    else {
+      this.setState({opacity : 1});
+        this.setState({rowWidth : 300})
+      
+    }
   };
-  touchEnd = () => {
-    this.setState({backgroundColor: '#dfe6e9'});
+  touchEnd = (x) => {
+    //  this.setState({opacity : 1});
+    //  console.log('row', x)
+    //  if(x == undefined){
+    //    console.log('sss')
+    //    this.setState({rowWidth : 300})
+    //  }
   };
 
   editDelete = (param, path) => {
     if (param == 'delete') {
-      let key = this.state.data[0].items[path.row].key;
-      database().ref('/users').child(key).remove();
+      // let key = this.state.data[0].items[path.row].key;
+      // database().ref('/users').child(key).remove();
       var array = [...this.state.data]; // make a separate copy of the array
       array[0].items.splice(path.row, 1);
       this.setState({data: array});
@@ -168,6 +208,7 @@ export class StickyFormExample extends React.Component {
       this.props.navigation.navigate('Form', {data});
     }
   };
+  
   render() {
     const {data} = this.state;
     return (
@@ -176,13 +217,14 @@ export class StickyFormExample extends React.Component {
         renderHeader={null}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
-        data={this.state.data}
+        data={this.state.data3}
         ref={ref => (this._list = ref)}
         renderSection={this._renderHeader}
         heightForIndexPath={() => 50}
         renderFooter={this._renderFooter}
         renderIndexPath={this._renderItem}
         rowWidth={this.state.rowWidth}
+        onScrollEndDrag={this.touchEnd}
         // onScroll={this._onScroll}
         onRefresh={() => {
           setTimeout(() => this._list.endRefresh(), 2000);
@@ -211,6 +253,7 @@ export class StickyFormExample extends React.Component {
     return (
       <TouchableOpacity style={{...styles.row}}>
         <View
+        opacity={this.state.opacity}
           style={{
             ...styles.titleText,
             minWidth: 180,
@@ -385,6 +428,7 @@ export class StickyFormExample extends React.Component {
     return (
       <TouchableOpacity style={{...styles.row}}>
         <View
+        opacity={this.state.opacity}
           style={{
             ...styles.titleText,
             minWidth: 180,

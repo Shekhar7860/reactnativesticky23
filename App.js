@@ -60,7 +60,6 @@ const Section = ({children, title}): Node => {
 
 const App: () => Node = () => {
   useEffect(() => {
-    debugger;
     const reference = database().ref('/users');
   }, []);
   const isDarkMode = useColorScheme() === 'dark';

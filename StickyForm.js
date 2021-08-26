@@ -34,7 +34,7 @@ export class StickyForm extends React.PureComponent<StickyFormPropType> {
     return (
       <LargeList
         {...this.props}
-        onScrollEndDrag={this.props.onScrollEndDrag}
+        onMomentumScrollEnd={this.props.onScrollEndDrag}
         extraData={this.props}
         ref={this._largeList}
         renderHeader={this._renderHeader}
