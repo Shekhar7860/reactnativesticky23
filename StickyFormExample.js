@@ -103,7 +103,7 @@ export class StickyFormExample extends React.Component {
     //     }
     //   });
 
-            for(let i = 1;i<20000;i++)
+            for(let i = 1;i<5000;i++)
             {
               updatedData[0].items.push({
                 key: i,
@@ -214,13 +214,13 @@ export class StickyFormExample extends React.Component {
     return (
       <StickyForm
         onScroll={this.touchBegin}
-        renderHeader={null}
+        renderHeader={this._renderHeader}
         style={{backgroundColor: 'white'}}
         contentStyle={{alignItems: 'flex-start', width: '200%'}}
         data={this.state.data3}
         ref={ref => (this._list = ref)}
-        renderSection={this._renderHeader}
-        heightForIndexPath={() => 50}
+       renderSection={this._renderSection}
+        heightForIndexPath={() => 0}
         renderFooter={this._renderFooter}
         renderIndexPath={this._renderItem}
         rowWidth={this.state.rowWidth}
