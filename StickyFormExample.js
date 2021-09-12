@@ -21,7 +21,6 @@ import {
   TextInput,
 } from 'react-native';
 import type {IndexPath} from '../../src';
-import database from '@react-native-firebase/database';
 import {Dimensions} from 'react-native';
 export class StickyFormExample extends React.Component {
   constructor(props) {

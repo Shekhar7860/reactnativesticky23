@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import {SpringScrollView} from 'react-native-spring-scrollview';
-import database from '@react-native-firebase/database';
+import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 class Home extends React.Component {
   constructor(props) {
@@ -112,76 +112,25 @@ class Home extends React.Component {
     }
   };
 
+  renderFirstView = () => {
+    return (<View>
+      <Text style={{color : '#95a5a6', marginTop : 10}}>People </Text>
+      <View style={styles.row}><View style={styles.commonWidth}><Text>Shanmuga Priya </Text></View>
+      <View style={styles.commonWidth}><Text >Shanmuga Shiva </Text></View></View>
+      <View style={styles.box}><View style={styles.row}><TouchableOpacity style={styles.firstView}></TouchableOpacity>
+      <View style={styles.secondView}><Text>Shanmuga's Ws</Text></View><View style={styles.thirdView}><Text>12 Boards </Text></View></View></View></View>)
+  }
+
   render() {
-    return (
-      <SpringScrollView>
-        <View style={styles.toolbar}>
-       <TouchableOpacity>
-                    <Image style={{width:30,marginLeft:5,  height:30, tintColor : 'white'}}></Image>
-                    </TouchableOpacity>
-                    <Text style={styles.toolbarTitle}>Form</Text>
-                    <TouchableOpacity>
-                    <Image style={{width:30,marginLeft:5,  height:30}}></Image>
-                    </TouchableOpacity>
-                </View>
-        <TextInput
-          selectTextOnFocus={true}
-          placeholder="Enter First Name"
-          style={styles.textInput}
-          placeholderTextColor="black"
-          onChangeText={text => this.setState({firstName: text})}
-          value={this.state.firstName}
-        />
-        <TextInput
-          selectTextOnFocus={true}
-          placeholder="Enter Last Name"
-          style={styles.textInput}
-          placeholderTextColor="black"
-          onChangeText={text => this.setState({lastName: text})}
-          value={this.state.lastName}
-        />
-        <TextInput
-          selectTextOnFocus={true}
-          placeholder="Enter Age"
-          style={styles.textInput}
-          placeholderTextColor="black"
-          onChangeText={text => this.setState({age: text})}
-          value={this.state.age}
-        />
-        <TextInput
-          selectTextOnFocus={true}
-          placeholder="Enter Profession"
-          style={styles.textInput}
-          placeholderTextColor="black"
-          onChangeText={text => this.setState({profession: text})}
-          value={this.state.profession}
-        />
-        <TextInput
-          selectTextOnFocus={true}
-          placeholder="Enter City"
-          style={styles.textInput}
-          placeholderTextColor="black"
-          onChangeText={text => this.setState({city: text})}
-          value={this.state.city}
-        />
-        <TouchableOpacity
-          style={{justifyContent: 'center', alignItems: 'center'}}
-          onPress={this.showDatePicker}>
-          <Text style={{...styles.textInput, paddingTop: 15}}>
-            {this.state.selectedDate}
-          </Text>
-        </TouchableOpacity>
-        <DateTimePickerModal
-          isVisible={this.state.setDatePickerVisibility}
-          mode="date"
-          onConfirm={this.handleConfirm}
-          onCancel={this.hideDatePicker}
-        />
-        <TouchableOpacity style={styles.button2} onPress={this.submit}>
-          <Text style={styles.textColor}>{this.state.buttonText}</Text>
-        </TouchableOpacity>
-      </SpringScrollView>
-    );
+    return <ScrollableTabView
+    style={{ marginTop: 20 }}
+    initialPage={1}
+    renderTabBar={() => <DefaultTabBar />}
+  >
+    <Text tabLabel='WorkSpace 4'>{this.renderFirstView()}</Text>
+    <Text tabLabel='Tasks 3'>Tasks</Text>
+    <Text tabLabel='Messages 6'>Messages</Text>
+  </ScrollableTabView>;
   }
 }
 
@@ -189,8 +138,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  firstView : {
+    width : '15%'
+  },
+  secondView : {
+    width : '65%'
+  },
+  thirdView : {
+    width : '20%'
+  },
+  box : {
+    marginTop : 10,
+    width : '90%',
+    borderWidth :1,
+    height : 30,
+    borderColor : '#bdc3c7',
+    alignSelf : 'center',
+    backgroundColor : '#ecf0f1'
+  },
+  commonWidth : {
+    width : '50%'
+  },
   textColor :{
     color : 'white',fontWeight : '700'
+  },
+  row : {
+    flexDirection : 'row'
   },
   button2: {
     width: '80%',
