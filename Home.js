@@ -113,21 +113,36 @@ class Home extends React.Component {
   };
 
   renderFirstView = () => {
-    return (<View>
-      <Text style={{color : '#95a5a6', marginTop : 10}}>People </Text>
+
+    return (<>
+       <View style={{alignSelf : 'flex-start', marginHorizontal : 20}}>
+      <Text style={{color : '#95a5a6', marginTop : 10}}>People </Text></View>
       <View style={styles.row}><View style={styles.commonWidth}><Text>Shanmuga Priya </Text></View>
       <View style={styles.commonWidth}><Text >Shanmuga Shiva </Text></View></View>
-      <View style={styles.box}><View style={styles.row}><TouchableOpacity style={styles.firstView}></TouchableOpacity>
-      <View style={styles.secondView}><Text>Shanmuga's Ws</Text></View><View style={styles.thirdView}><Text>12 Boards </Text></View></View></View></View>)
+      <View style={styles.box}>
+        <View style={{...styles.row, marginTop : 2}}><TouchableOpacity style={styles.firstView}></TouchableOpacity>
+      <View style={styles.secondView}><Text>Shanmuga's WS</Text></View><View style={styles.thirdView}><Text>12 Boards </Text></View></View></View>
+      <View style={styles.box}>
+        <View style={{...styles.row, marginTop : 2}}><TouchableOpacity style={styles.firstView}></TouchableOpacity>
+      <View style={styles.secondView}><Text>Shanmuga's WS</Text></View><View style={styles.thirdView}><Text>6 Boards </Text></View></View></View>
+      <View style={styles.box}>
+        <View style={{...styles.row, marginTop : 2}}><TouchableOpacity style={styles.firstView}></TouchableOpacity>
+      <View style={styles.secondView}><Text>Shanmuga status r...</Text></View><View style={styles.thirdView}><Text>6 Bords</Text></View></View></View>
+      <View style={styles.margin10}><Text>Workspace/Document Name/Page</Text>
+      <Text>Lorem Ipsum is simply dummy text of the printing and {"\n"}typesetting industry. Lorem Ipsum has been the{"\n"} industry's standard dummy text ever since the 1500s, {"\n"}when an unknown printer took a galley of type and {"\n"}scrambled it to make a type specimen book. It has {"\n"}survived not only five centuries</Text></View><View style={styles.borderBottom}/>
+      <View style={styles.margin10}><Text>Works/Table App/Table/View Name</Text>
+      <Text style={styles.boldFont}>Opportunity</Text>
+      <Text>Lorem Ipsum is simply dummy text of the printing and {"\n"}typesetting industry. Lorem Ipsum has been the{"\n"} industry's standard dummy text ever since the 1500s, {"\n"}when an unknown printer took a galley of type and {"\n"}scrambled it to make a type specimen book. It has {"\n"}survived not only five centuries</Text></View><View style={styles.borderBottom}/></>
+      )
   }
 
   render() {
     return <ScrollableTabView
     style={{ marginTop: 20 }}
-    initialPage={1}
+    initialPage={0}
     renderTabBar={() => <DefaultTabBar />}
   >
-    <Text tabLabel='WorkSpace 4'>{this.renderFirstView()}</Text>
+    <Text tabLabel='WorkSpace 4'><View style={styles.container2}>{this.renderFirstView()}</View></Text>
     <Text tabLabel='Tasks 3'>Tasks</Text>
     <Text tabLabel='Messages 6'>Messages</Text>
   </ScrollableTabView>;
@@ -139,31 +154,45 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   firstView : {
-    width : '15%'
+    width : '10%'
   },
   secondView : {
-    width : '65%'
+    width : '60%'
   },
   thirdView : {
-    width : '20%'
+    width : '25%'
   },
+  container2 : {
+  
+  
+  }, 
+  margin10 : {
+    marginHorizontal : 20,
+    marginTop : 10  },
   box : {
-    marginTop : 10,
+    marginTop : 20,
     width : '90%',
     borderWidth :1,
     height : 30,
     borderColor : '#bdc3c7',
-    alignSelf : 'center',
+    marginHorizontal : 20,
+    width : 300,
     backgroundColor : '#ecf0f1'
   },
   commonWidth : {
-    width : '50%'
+    width : '50%', marginHorizontal : 20
   },
   textColor :{
     color : 'white',fontWeight : '700'
   },
   row : {
     flexDirection : 'row'
+  },
+  borderBottom : {
+    width : '100%',
+    marginTop : 20,
+    borderBottomWidth : 1,
+    borderBottomColor : '#95a5a6'
   },
   button2: {
     width: '80%',
@@ -204,6 +233,10 @@ toolbarTitle:{
     flex:1,
     fontSize:20                //Step 3
 },
+boldFont : {
+  fontWeight : 'bold',
+  marginTop : 5
+}
 });
 
 export default Home;
